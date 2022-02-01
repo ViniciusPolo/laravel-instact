@@ -40,13 +40,15 @@
             })
         </script>
     @endif
-    @if (session('error'))
+    @if ($errors->any())
+        @foreach($errors->all() as $error)
         <script>
             Toast.fire({
                 icon: 'error',
-                title: '{{ session('error') }}'
+                title: '{{ $error }}'
             })
         </script>
+        @endforeach
     @endif
 
     @stack('scripts')

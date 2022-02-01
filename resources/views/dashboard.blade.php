@@ -6,9 +6,9 @@
     @include('components/navbar')
     
     <div class="min-vh-100 d-flex flex-column justify-content-center align-items-center" style="margin-top: 100px">
-        @for($i=0;$i<5;$i++)
+        @foreach ($posts as $post)
         @include('components/post-card')
-        @endfor
+        @endforeach
     </div>
     @include('components/footer')
    

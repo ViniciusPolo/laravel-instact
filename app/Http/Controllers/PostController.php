@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use Illuminate\Http\Request;
+use App\Http\Requests\StorePostRequest;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\UpdatePostRequest;
 
 class PostController extends Controller
 {
@@ -15,7 +17,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+        $posts = Post::orderby('id','desc')->get();
+        return view('/dashboard', compact('posts', 'user'));
     }
 
     /**
@@ -25,7 +29,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        $user = auth()->user();
+
+        return view('posts.create', compact('user'));
     }
 
     /**
@@ -34,9 +40,20 @@ class PostController extends Controller
      * @param  \App\Http\Requests\StorePostRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePostRequest $request)
+    public function store(Request $request)
     {
-        //
+        $user = auth()->user();
+        $path = $request->photo->store('public/images');
+        $url = Storage::url($path);
+
+        Post::create([
+            'image' => $url,
+            'description' =>$request->description,
+            'user_id'=>$user->id
+        ]);
+
+        return redirect('/dashboard');
+
     }
 
     /**
