@@ -7,14 +7,25 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StorePostRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdatePostRequest;
+use App\Services\PostService;
 
 class PostController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
+     * @var PostService
      * @return \Illuminate\Http\Response
      */
+    protected $service;
+
+    /**
+     * Método Contrutor da Classa
+     */
+    public function __construct(PostService $service)
+    {
+        $this->service = $service; //injeção de dependencias
+    }
+
+
     public function index()
     {
         $user = auth()->user();
@@ -40,19 +51,21 @@ class PostController extends Controller
      * @param  \App\Http\Requests\StorePostRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $user = auth()->user();
-        $path = $request->photo->store('public/images');
-        $url = Storage::url($path);
+        //código transferido para a service
+        $input = $request->only('description');
+        $input['user_id'] = auth()->id();
 
-        Post::create([
-            'image' => $url,
-            'description' =>$request->description,
-            'user_id'=>$user->id
-        ]);
+        $response = $this->service->store(
+            $input,
+            $request->photo
+        );
 
-        return redirect('/dashboard');
+        if(!$response['sucess']){
+            return back()->with('error',$response['message']);
+        }
+        return redirect('dashboard');
 
     }
 

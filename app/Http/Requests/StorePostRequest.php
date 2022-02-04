@@ -24,7 +24,7 @@ class StorePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'photo' => 'require|mimes:jpg,bmp,png' ,
+            'photo' => 'required|mimes:jpg,bmp,png',
             'description' => 'required'   
             //não pode haver post sem foto por isso o require na foto, mimes, somente aqueles tipos de imagem
         ];

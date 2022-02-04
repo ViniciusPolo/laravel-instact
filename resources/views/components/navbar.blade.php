@@ -1,7 +1,9 @@
 <nav class="navbar navbar-light fixed-top bg-white border-bottom">
     <div class="container-fluid" style="width: 900px; max-width: 100%">
         <div class="navbar-header">
+            <a href="/dashboard">
             <img src="{{asset('images/logo.png')}}" alt="instact" width="100">
+            </a>
         </div>
         <div class="navbar-nav flex-row">
             <a href="/posts/create" class="nav-link me-3">
